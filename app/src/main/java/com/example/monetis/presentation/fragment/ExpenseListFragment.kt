@@ -14,7 +14,6 @@ import com.example.monetis.presentation.viewmodel.ExpenseListViewModel
 import com.example.monetis.presentation.factory.ExpenseListViewModelFactory
 import com.example.monetis.data.repository.ExpenseRepositoryImpl
 import com.example.monetis.data.datasource.local.AppDatabase
-import android.widget.Button
 import com.example.monetis.domain.entity.Expense
 
 class ExpenseListFragment : Fragment() {
@@ -45,15 +44,6 @@ class ExpenseListFragment : Fragment() {
         }
 
         expenseListViewModel.getExpenses()
-
-        val addExpenseButton: Button = binding.findViewById(R.id.addExpenseButton)
-        addExpenseButton.setOnClickListener {
-            val addExpenseFragment = AddExpenseFragment()
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, addExpenseFragment)
-                .addToBackStack(null)
-                .commit()
-        }
 
         return binding
     }
