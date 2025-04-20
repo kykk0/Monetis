@@ -9,3 +9,4 @@ data class ChatRequest(
     @SerialName("model") val model: String = "GigaChat",
     @SerialName("messages") val messages: List<Message>
 )
+

@@ -8,19 +8,21 @@ import retrofit2.http.*
 interface GigaChatApi {
 
     @FormUrlEncoded
-    @POST("api/v2/oauth")
+    @POST("oauth")
     suspend fun getAccessToken(
-        @Field("scope") scope: String = "GIGACHAT_API_PERS",
         @Header("Authorization") auth: String,
         @Header("RqUID") rqUid: String,
         @Header("Content-Type") contentType: String = "application/x-www-form-urlencoded",
-        @Header("Accept") accept: String = "application/json"
+        @Header("Accept") accept: String = "application/json",
+        @Field("scope") scope: String = "GIGACHAT_API_PERS"
     ): TokenResponse
 
-    @POST("api/v1/chat/completions")
+    @POST("https://gigachat.devices.sberbank.ru/api/v1/chat/completions")
     suspend fun sendMessage(
         @Header("Authorization") bearer: String,
         @Header("RqUID") rqUid: String,
+        @Header("Content-Type") contentType: String = "application/json",
+        @Header("Accept") accept: String = "application/json",
         @Body request: ChatRequest
     ): ChatResponse
 }
