@@ -12,6 +12,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.monetis.R
+import com.example.monetis.data.datasource.local.AppDatabase
+import com.example.monetis.data.repository.ExpenseRepositoryImpl
 import com.example.monetis.data.repository.GigaChatRepository
 import com.example.monetis.presentation.adapter.ChatAdapter
 import com.example.monetis.presentation.viewmodel.ChatViewModel
@@ -41,9 +43,13 @@ class AIChatFragment : Fragment() {
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
+        val db = AppDatabase.getDatabase(requireContext().applicationContext)
+        val expenseRepository = ExpenseRepositoryImpl(db.expenseDao())
+
         val repository = GigaChatRepository(
             clientId = "e7d5bec7-b395-4389-ad85-469c801a47c5",
-            clientSecret = "5c00d603-45c1-4516-b76c-1629e4e2bcca"
+            clientSecret = "5c00d603-45c1-4516-b76c-1629e4e2bcca",
+            expenseRepository = expenseRepository,
         )
 // ZTdkNWJlYzctYjM5NS00Mzg5LWFkODUtNDY5YzgwMWE0N2M1OjVjMDBkNjAzLTQ1YzEtNDUxNi1iNzZjLTE2MjllNGUyYmNjYQ==
 

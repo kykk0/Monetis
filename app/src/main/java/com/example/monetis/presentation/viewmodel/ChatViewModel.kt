@@ -14,10 +14,10 @@ class ChatViewModel(
     private val _reply = MutableLiveData<String>()
     val reply: LiveData<String> = _reply
 
-    fun ask(message: String) {
+    fun ask(userMessage: String) {
         viewModelScope.launch {
             try {
-                val response = repository.sendMessage(message)
+                val response = repository.sendMessageWithExpenses(userMessage)
                 _reply.value = response
             } catch (e: Exception) {
                 _reply.value = "Ошибка: ${e.message}"
@@ -25,4 +25,5 @@ class ChatViewModel(
         }
     }
 }
+
 

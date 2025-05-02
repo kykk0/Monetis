@@ -4,11 +4,15 @@ import android.util.Log
 import com.example.monetis.data.network.GigaChatRetrofit
 import com.example.monetis.data.dto.ChatRequest
 import Message
+import com.example.monetis.domain.entity.Expense
+import com.example.monetis.domain.repository.ExpenseRepository
+import java.math.BigDecimal
 import java.util.*
 
 class GigaChatRepository(
     private val clientId: String,
-    private val clientSecret: String
+    private val clientSecret: String,
+    private val expenseRepository: ExpenseRepository,
 ) {
 
     private var accessToken: String? = null
@@ -34,16 +38,22 @@ class GigaChatRepository(
         return accessToken!!
     }
 
-    suspend fun sendMessage(message: String): String {
+    suspend fun sendMessageWithExpenses(userMessage: String): String {
         val token = getAccessToken()
+        val expenses = expenseRepository.getAllExpenses()
 
-        Log.d("GigaChat", "Отправляем сообщение: $message")
+        val expensesContext = buildExpensesContext(expenses)
+
+        val messages = listOf(
+            Message(role = "user", content = "Ты личный финансовый советник. Ответь, опираясь на список трат."),
+            Message(role = "user", content = expensesContext),
+            Message(role = "user", content = userMessage)
+        )
 
         val request = ChatRequest(
             model = "GigaChat-2",
-            messages = listOf(Message(role = "user", content = message))
+            messages = messages
         )
-
 
         val response = GigaChatRetrofit.api.sendMessage(
             bearer = "Bearer $token",
@@ -51,11 +61,16 @@ class GigaChatRepository(
             request = request
         )
 
-        val reply = response.choices.firstOrNull()?.message?.content ?: "Нет ответа"
+        return response.choices.firstOrNull()?.message?.content ?: "Нет ответа"
+    }
 
-        Log.d("GigaChat", "Ответ от модели: $reply")
 
-        return reply
+    private fun buildExpensesContext(expenses: List<Expense>): String {
+        return buildString {
+            append("Ниже список расходов пользователя:\n")
+            expenses.forEach {
+                append("${it.date}; ${it.category}; ${it.amount.setScale(2, BigDecimal.ROUND_HALF_UP)}\n")
+            }
+        }
     }
 }
-
