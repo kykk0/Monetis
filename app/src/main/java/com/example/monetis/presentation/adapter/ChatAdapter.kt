@@ -3,33 +3,42 @@ package com.example.monetis.presentation.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.monetis.R
-import com.example.monetis.domain.entity.Message
-import android.widget.TextView
 
-class ChatAdapter : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
+class ChatAdapter : RecyclerView.Adapter<ChatAdapter.MessageViewHolder>() {
 
-    private val messages: MutableList<Message> = mutableListOf()
+    private val messages = mutableListOf<Pair<String, Boolean>>()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_chat_message, parent, false)
-        return ChatViewHolder(itemView)
-    }
-
-    override fun onBindViewHolder(holder: ChatViewHolder, position: Int) {
-        val message = messages[position]
-        holder.messageTextView.text = message.text
-    }
-
-    override fun getItemCount(): Int = messages.size
-
-    fun addMessage(message: Message) {
-        messages.add(message)
+    fun addMessage(text: String, isUser: Boolean) {
+        messages.add(text to isUser)
         notifyItemInserted(messages.size - 1)
     }
 
-    class ChatViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val messageTextView: TextView = itemView.findViewById(R.id.messageTextView)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_chat_message, parent, false)
+        return MessageViewHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: MessageViewHolder, position: Int) {
+        val (text, isUser) = messages[position]
+        holder.bind(text, isUser)
+    }
+
+    override fun getItemCount() = messages.size
+
+    class MessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val textView: TextView = itemView.findViewById(R.id.messageTextView)
+
+        fun bind(text: String, isUser: Boolean) {
+            textView.text = text
+            textView.textAlignment = if (isUser) View.TEXT_ALIGNMENT_TEXT_END else View.TEXT_ALIGNMENT_TEXT_START
+            textView.setBackgroundResource(
+                if (isUser) R.drawable.message_user_background else R.drawable.message_ai_background
+            )
+        }
     }
 }
+
