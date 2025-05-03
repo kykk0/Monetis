@@ -8,6 +8,7 @@ import com.example.monetis.R
 import com.example.monetis.presentation.fragment.AddExpenseFragment
 import com.example.monetis.presentation.fragment.ExpenseListFragment
 import com.example.monetis.presentation.fragment.AIChatFragment
+import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity() {
 
@@ -15,25 +16,29 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val currentUser = FirebaseAuth.getInstance().currentUser
+
         if (savedInstanceState == null) {
+            val startFragment = if (currentUser != null) {
+                ExpenseListFragment()
+            } else {
+                com.example.monetis.presentation.fragment.AuthFragment()
+            }
+
             supportFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, ExpenseListFragment())
+                .replace(R.id.fragmentContainer, startFragment)
                 .commit()
         }
 
-        val addExpenseButton = findViewById<View>(R.id.addExpenseButton)
-        val expensesListButton = findViewById<View>(R.id.expensesListButton)
-        val aiChatButton = findViewById<View>(R.id.aiChatButton)
-
-        addExpenseButton.setOnClickListener {
+        findViewById<View>(R.id.addExpenseButton).setOnClickListener {
             openFragment(AddExpenseFragment())
         }
 
-        expensesListButton.setOnClickListener {
+        findViewById<View>(R.id.expensesListButton).setOnClickListener {
             openFragment(ExpenseListFragment())
         }
 
-        aiChatButton.setOnClickListener {
+        findViewById<View>(R.id.aiChatButton).setOnClickListener {
             openFragment(AIChatFragment())
         }
     }
