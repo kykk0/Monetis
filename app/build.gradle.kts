@@ -70,4 +70,7 @@ dependencies {
     implementation(libs.retrofit2.kotlinx.serialization.converter)
     implementation(libs.okhttp3)
     implementation(libs.logging.interceptor)
+
+    implementation("androidx.fragment:fragment-ktx:1.4.0")
+
 }

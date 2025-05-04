@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
 import com.example.monetis.R
 import com.google.firebase.auth.FirebaseAuth
 
@@ -29,7 +30,14 @@ class ProfileFragment : Fragment() {
 
         logoutButton.setOnClickListener {
             FirebaseAuth.getInstance().signOut()
-            requireActivity().recreate()
+            redirectToAuthFragment()
+        }
+    }
+
+    private fun redirectToAuthFragment() {
+        requireActivity().supportFragmentManager.commit {
+            replace(R.id.fragmentContainer, AuthFragment())
+            addToBackStack(null)
         }
     }
 }
