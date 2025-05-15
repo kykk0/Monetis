@@ -3,6 +3,7 @@ package com.example.monetis.data.datasource.local
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import com.example.monetis.data.entity.ExpenseEntity
 
 @Dao
@@ -18,4 +19,7 @@ interface ExpenseDao {
 
     @Query("DELETE FROM expenses WHERE id = :id")
     suspend fun deleteExpenseById(id: String)
+
+    @Update
+    suspend fun update(expense: ExpenseEntity)
 }
