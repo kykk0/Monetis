@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.monetis.R
@@ -55,22 +56,47 @@ class AddExpenseFragment : Fragment() {
 
         val addButton = binding.findViewById<Button>(R.id.addButton)
         addButton.setOnClickListener {
-            val amount = BigDecimal(amountEditText.text.toString())
-            val selectedCategory = categorySpinner.selectedItem as ExpenseCategory
-            val category = selectedCategory.name
-            val description = descriptionEditText.text.toString()
-            val date = dateEditText.text.toString()
+            val amountString = amountEditText.text.toString()
+            if (amountString.isNotEmpty()) {
+                val amount = try {
+                    val parsedAmount = BigDecimal(amountString)
+                    if (parsedAmount <= BigDecimal.ZERO) {
+                        showToast("Сумма не может быть отрицательной!")
+                        return@setOnClickListener
+                    }
+                    parsedAmount
+                } catch (e: NumberFormatException) {
+                    showToast("Введите корректную сумму!")
+                    return@setOnClickListener
+                }
 
-            addExpenseViewModel.addExpense(amount, category, description, date)
+                val selectedCategory = categorySpinner.selectedItem as ExpenseCategory
+                val category = selectedCategory.name
+                val description = descriptionEditText.text.toString()
+                val date = dateEditText.text.toString()
 
-            val expenseListFragment = ExpenseListFragment()
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, expenseListFragment)
-                .addToBackStack(null)
-                .commit()
+                if (category.isEmpty() || date.isEmpty()) {
+                    showToast("Заполните все поля!")
+                    return@setOnClickListener
+                }
+
+                addExpenseViewModel.addExpense(amount, category, description, date)
+
+                val expenseListFragment = ExpenseListFragment()
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragmentContainer, expenseListFragment)
+                    .addToBackStack(null)
+                    .commit()
+            } else {
+                showToast("Сумма не может быть пустой!")
+            }
         }
 
         return binding
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
     private fun setTodayDate() {
