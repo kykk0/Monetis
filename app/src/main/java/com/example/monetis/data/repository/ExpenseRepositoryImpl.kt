@@ -48,4 +48,16 @@ class ExpenseRepositoryImpl(
     override suspend fun deleteExpenseById(id: String) {
         expenseDao.deleteExpenseById(id)
     }
+
+    override suspend fun updateExpense(expense: Expense) {
+        val expenseEntity = ExpenseEntity(
+            id = expense.id,
+            amount = expense.amount.toString(),
+            category = expense.category,
+            description = expense.description,
+            date = expense.date
+        )
+        expenseDao.update(expenseEntity)
+    }
+
 }

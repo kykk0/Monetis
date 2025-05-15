@@ -4,19 +4,6 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- Заголовок для информации о трате -->
-    <TextView
-        android:id="@+id/expenseDetailTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Expense Details"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="16dp"/>
-
     <!-- Сумма -->
     <TextView
         android:id="@+id/amountTextView"
@@ -24,7 +11,7 @@
         android:layout_height="wrap_content"
         android:text="Amount: "
         android:textSize="18sp"
-        app:layout_constraintTop_toBottomOf="@id/expenseDetailTitle"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="32dp"
         android:layout_marginStart="16dp"/>
@@ -65,16 +52,29 @@
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"/>
 
-    <!-- Кнопка для удаления трат -->
+    <!-- Кнопка для редактирования трат -->
     <Button
-        android:id="@+id/deleteButton"
-        android:layout_width="wrap_content"
+        android:id="@+id/editButton"
+        android:layout_width="180dp"
         android:layout_height="wrap_content"
-        android:text="Delete Expense"
+        android:text="Редактировать"
         app:layout_constraintTop_toBottomOf="@id/descriptionTextView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="32dp"
+        android:backgroundTint="@android:color/holo_purple"
+        android:textColor="@android:color/white"/>
+
+    <!-- Кнопка для удаления трат -->
+    <Button
+        android:id="@+id/deleteButton"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:text="Удалить"
+        app:layout_constraintTop_toBottomOf="@id/editButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp"
         android:layout_marginBottom="16dp"
         android:backgroundTint="@android:color/holo_red_dark"
         android:textColor="@android:color/white"/>

@@ -38,6 +38,7 @@ class ExpenseDetailFragment : Fragment() {
         val descriptionTextView = binding.findViewById<TextView>(R.id.descriptionTextView)
         val dateTextView = binding.findViewById<TextView>(R.id.dateTextView)
 
+        val editButton = binding.findViewById<Button>(R.id.editButton)
         val deleteButton = binding.findViewById<Button>(R.id.deleteButton)
 
         expenseId?.let {
@@ -52,12 +53,25 @@ class ExpenseDetailFragment : Fragment() {
             }
         }
 
+        editButton.setOnClickListener {
+            expenseId?.let { id ->
+                val fragment = EditExpenseFragment().apply {
+                    arguments = Bundle().apply {
+                        putString("expenseId", id)
+                    }
+                }
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragmentContainer, fragment)
+                    .addToBackStack(null)
+                    .commit()
+            }
+        }
+
         deleteButton.setOnClickListener {
             expenseId?.let { id ->
                 expenseDetailViewModel.deleteExpenseById(id)
                 requireActivity().supportFragmentManager.beginTransaction()
                     .replace(R.id.fragmentContainer, ExpenseListFragment())
-                    .addToBackStack(null)
                     .commit()
             }
         }
